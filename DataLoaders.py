@@ -6,6 +6,19 @@ import torch.nn.functional as F
 import random
 
 
+def make_dataloader(is_train=True,
+                    data_kwargs=None,
+                    num_workers=4,
+                    chunk_size=32000,
+                    batch_size=16):
+    dataset = Datasets(**data_kwargs)
+    return DataLoaders(dataset,
+                      is_train=is_train,
+                      chunk_size=chunk_size,
+                      batch_size=batch_size,
+                      num_workers=num_workers)
+
+
 class Datasets(Dataset):
     '''
        Load audio data
@@ -62,7 +75,6 @@ class Spliter():
            Split a audio sample
         '''
         length = sample['mix'].shape[0]
-        print(length)
         if length < self.least:
             return []
         audio_lists = []
@@ -80,7 +92,6 @@ class Spliter():
                     break
                 audio_lists.append(self.chunk_audio(sample, random_start))
                 random_start += self.least
-        print(audio_lists[0]['mix'].shape)
         return audio_lists
 
 
@@ -130,12 +141,18 @@ class DataLoaders():
                 random.shuffle(mini_batch)
             collate_chunk = []
             for start in range(0, length-self.batch_size+1, self.batch_size):
-                collate_chunk.append(default_collate(
-                    mini_batch[start:start+self.batch_size]))
+                b = default_collate(
+                    mini_batch[start:start+self.batch_size])
+                collate_chunk.append(b)
             idx = length % self.batch_size
             mini_batch = mini_batch[-idx:] if idx else []
             for m_batch in collate_chunk:
-                yield m_batch
+                yield m_batch # batch of datasets
+                '''
+                   mini_batch like this
+                   'mix': batch x L
+                   'ref': [bathc x L, bathc x L]
+                '''
 
 
 if __name__ == "__main__":
@@ -143,7 +160,7 @@ if __name__ == "__main__":
                         ['/home/likai/data1/create_scp/cv_s1.scp', '/home/likai/data1/create_scp/cv_s2.scp'])
     dataloaders = DataLoaders(datasets, num_workers=0,
                               batch_size=10, is_train=False)
-    for i in dataloaders:
-        print(i)
+    for eg in dataloaders:
+        print(eg)
         import pdb
         pdb.set_trace()
