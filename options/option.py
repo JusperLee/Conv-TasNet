@@ -10,7 +10,7 @@ def parse(opt_path, is_tain=True):
        opt_path: the path of yml file
        is_train: True
     '''
-    logger.info('reading .yml file .......')
+    logger.info('Reading .yml file .......')
     with open(opt_path,mode='r') as f:
         opt = yaml.load(f,Loader=yaml.FullLoader)
     # Export CUDA_VISIBLE_DEVICES

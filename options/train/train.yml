@@ -1,42 +1,42 @@
 #### Conv-TasNet Setting
 name: Conv_Tasnet
-use_tb_logger: true
 gpu_ids: [0,1,2,3,4,5,6,7]
 epochs: 100
 
-#### Audio Configure
-audio_conf:
+#### Dataset Configure
+datasets:
+  num_workers: 10
+  batch_size: 10
   fs: 8000
   chunk_len: 4
   chunk_size: 32000 #### fs*chunk_len
-  num_spks: 2
-
-#### Dataset Configure
-datasets:
   train:
     mix_scp: /home/likai/data1/create_scp/tr_mix.scp
     ref_scp: 
       - /home/likai/data1/create_scp/tr_s1.scp
       - /home/likai/data1/create_scp/tr_s2.scp
-    fs: 8000
+    sr: 8000
   val:
     mix_scp: /home/likai/data1/create_scp/cv_mix.scp
     ref_scp: 
       - /home/likai/data1/create_scp/cv_s1.scp
       - /home/likai/data1/create_scp/cv_s2.scp
-    fs: 8000
+    sr: 8000
 
 #### training settings: learning rate scheme, loss
 train:
   optimizer: adam
-  learning_rate: !!float 1e-3
-  weight_decay: !!float 1e-5
   min_lr: !!float 1e-8
-  patiance: 2
+  patience: 2
   factor: 0.5
   logging_period: 200
-  batch_size: 16
   clip_norm: ~
+  num_epochs: 100
+  checkpoint: Conv-TasNet
+
+optimizer_kwargs:
+  lr: !!float 1e-3
+  weight_decay: !!float 1e-5
 
 #### network configure
 net_conf:
