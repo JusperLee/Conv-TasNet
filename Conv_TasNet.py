@@ -275,7 +275,7 @@ def test_convtasnet():
     x = torch.randn(4, 32)
     nnet = ConvTasNet()
     s = nnet(x)
-    print(str(look_parameters(nnet))+' Mb')
+    print(str(check_parameters(nnet))+' Mb')
     print(s[1].shape)
 
 
