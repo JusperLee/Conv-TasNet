@@ -51,3 +51,7 @@ Conv-TasNet: Surpassing Ideal Time-Frequency Magnitude Masking for Speech Separa
 |  512 | 32  |128|512|128|   3| 8  |  3 |  gLN |x  | 3.06  |  5.1M | 14.7  |  15.0 |
 | 512  |  16 |128| 512  |128| 3  |   8|  3 | gLN  |  x | 1.53  | 5.1M  |**15.3**  | **15.6**  |
 | 512  |  16 |128| 512  |128|  3 |  8 |  3 |cLN   |  √ |  1.53 | 5.1M  | 10.6  |  11.0 |
+
+### Pre-Train Model
+
+[**Google Driver**](https://drive.google.com/open?id=18xCr-N_Ashf9X9q0nxQSVZbDXDk2ONVQ)
