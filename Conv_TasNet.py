@@ -68,11 +68,6 @@ class CumulativeLayerNorm(nn.LayerNorm):
 
 
 def select_norm(norm, dim):
-    if norm not in ['gln', 'cln', 'bn']:
-        if x.dim() != 3:
-            raise RuntimeError("{} accept 3D tensor as input".format(
-                self.__name__))
-
     if norm == 'gln':
         return GlobalLayerNorm(dim, elementwise_affine=True)
     if norm == 'cln':
