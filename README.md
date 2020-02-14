@@ -59,3 +59,12 @@ Conv-TasNet: Surpassing Ideal Time-Frequency Magnitude Masking for Speech Separa
 ### Pre-Train Model
 
 [**Google Driver**](https://drive.google.com/open?id=18xCr-N_Ashf9X9q0nxQSVZbDXDk2ONVQ)
+
+
+### Our Results Image
+![](https://github.com/JusperLee/Conv-TasNet/conv_tasnet_loss.png)
+
+
+### Reference
+
+- [Luo Yi's Conv-Tasnet Code](https://github.com/naplab/Conv-TasNet)

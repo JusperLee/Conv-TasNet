@@ -75,7 +75,7 @@ def si_snr_loss(ests, egs):
         return sum(
             [sisnr(ests[s], refs[t])
              for s, t in enumerate(permute)]) / len(permute)
-             # average the value
+        # average the value
 
     # P x N
     N = egs["mix"].size(0)

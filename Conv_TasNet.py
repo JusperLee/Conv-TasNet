@@ -129,7 +129,7 @@ class Conv1D_Block(nn.Module):
     '''
 
     def __init__(self, in_channels=256, out_channels=512,
-                 kernel_size=3, dilation=1, norm='gln', causal=False):
+                 kernel_size=3, dilation=1, norm='gln', causal=False, skip_con='True'):
         super(Conv1D_Block, self).__init__()
         # conv 1 x 1
         self.conv1x1 = Conv1D(in_channels, out_channels, 1)
@@ -144,7 +144,9 @@ class Conv1D_Block(nn.Module):
         self.PReLU_2 = nn.PReLU()
         self.norm_2 = select_norm(norm, out_channels)
         self.Sc_conv = nn.Conv1d(out_channels, in_channels, 1, bias=True)
+        self.Output = nn.Conv1d(out_channels, in_channels, 1, bias=True)
         self.causal = causal
+        self.skip_con = skip_con
 
     def forward(self, x):
         # x: N x C x L
@@ -156,11 +158,57 @@ class Conv1D_Block(nn.Module):
         # causal: N x O_C x (L+pad)
         # noncausal: N x O_C x L
         c = self.dwconv(c)
+        c = self.PReLU_2(c)
+        c = self.norm_2(c)
         # N x O_C x L
         if self.causal:
             c = c[:, :, :-self.pad]
-        c = self.Sc_conv(c)
+        if self.skip_con:
+            Sc = self.Sc_conv(c)
+            c = self.Output(c)
+            return Sc, c+x
+        c = self.Output(c)
         return x+c
+
+
+class Separation(nn.Module):
+    '''
+       R	Number of repeats
+       X	Number of convolutional blocks in each repeat
+       B	Number of channels in bottleneck and the residual paths’ 1 × 1-conv blocks  
+       H	Number of channels in convolutional blocks
+       P	Kernel size in convolutional blocks 
+       norm The type of normalization(gln, cl, bn)
+       causal  Two choice(causal or noncausal)
+       skip_con Whether to use skip connection
+    '''
+
+    def __init__(self, R, X, B, H, P, norm='gln', causal=False, skip_con=True):
+        super(Separation, self).__init__()
+        self.separation = nn.ModuleList([])
+        for r in range(R):
+            for x in range(X):
+                self.separation.append(Conv1D_Block(
+                    B, H, P, 2**x, norm, causal, skip_con))
+        self.skip_con = skip_con
+    
+    def forward(self, x):
+        '''
+           x: [B, N, L]
+           out: [B, N, L]
+        '''
+        if self.skip_con:
+            skip_connection = 0
+            for i in range(len(self.separation)):
+                skip, out = self.separation[i](x)
+                skip_connection = skip_connection + skip
+                x = x + out
+            return skip_connection
+        else:
+            for i in range(len(self.separation)):
+                out = self.separation[i](x)
+                x = x + out
+            return x
 
 
 class ConvTasNet(nn.Module):
@@ -187,7 +235,8 @@ class ConvTasNet(nn.Module):
                  norm="gln",
                  num_spks=2,
                  activate="relu",
-                 causal=False):
+                 causal=False,
+                 skip_con=True):
         super(ConvTasNet, self).__init__()
         # n x 1 x T => n x N x T
         self.encoder = Conv1D(1, N, L, stride=L // 2, padding=0)
@@ -197,8 +246,7 @@ class ConvTasNet(nn.Module):
         self.BottleN_S = Conv1D(N, B, 1)
         # Separation block
         # n x B x T => n x B x T
-        self.separation = self._Sequential_repeat(
-            R, X, in_channels=B, out_channels=H, kernel_size=P, norm=norm, causal=causal)
+        self.separation = Separation(R, X, B, H, P ,norm=norm, causal=causal, skip_con=skip_con)
         # n x B x T => n x 2*N x T
         self.gen_masks = Conv1D(B, num_spks*N, 1)
         # n x N x T => n x 1 x L
@@ -212,30 +260,6 @@ class ConvTasNet(nn.Module):
         self.activation_type = activate
         self.activation = active_f[activate]
         self.num_spks = num_spks
-
-    def _Sequential_block(self, num_blocks, **block_kwargs):
-        '''
-           Sequential 1-D Conv Block
-           input:
-                 num_block: how many blocks in every repeats
-                 **block_kwargs: parameters of Conv1D_Block
-        '''
-        Conv1D_Block_lists = [Conv1D_Block(
-            **block_kwargs, dilation=(2**i)) for i in range(num_blocks)]
-
-        return nn.Sequential(*Conv1D_Block_lists)
-
-    def _Sequential_repeat(self, num_repeats, num_blocks, **block_kwargs):
-        '''
-           Sequential repeats
-           input:
-                 num_repeats: Number of repeats
-                 num_blocks: Number of block in every repeats
-                 **block_kwargs: parameters of Conv1D_Block
-        '''
-        repeats_lists = [self._Sequential_block(
-            num_blocks, **block_kwargs) for i in range(num_repeats)]
-        return nn.Sequential(*repeats_lists)
 
     def forward(self, x):
         if x.dim() >= 3:

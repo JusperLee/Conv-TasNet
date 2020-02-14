@@ -1,12 +1,13 @@
 #### Conv-TasNet Setting
-name: Conv_Tasnet
-gpu_ids: [0,1,2,3,4,5,6,7]
+name: Conv_Tasnet_with_skip
+gpu_ids: [1,2,3,4,5,6,7]
+#gpu_ids: [0]
 epochs: 100
 
 #### Dataset Configure
 datasets:
-  num_workers: 10
-  batch_size: 10
+  num_workers: 5
+  batch_size: 40
   fs: 8000
   chunk_len: 4
   chunk_size: 32000 #### fs*chunk_len
@@ -32,7 +33,7 @@ train:
   logging_period: 200
   clip_norm: ~
   num_epochs: 100
-  checkpoint: Conv-TasNet
+  checkpoint: Conv-TasNet-with-skip
 
 optimizer_kwargs:
   lr: !!float 1e-3
@@ -49,8 +50,9 @@ net_conf:
   R: 3
   norm: gln
   num_spks: 2
-  activate: relu
+  activate: sigmoid
   causal: false
+  skip_con: true
 
 #### resume model
 resume:
