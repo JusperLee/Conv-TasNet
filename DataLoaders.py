@@ -101,7 +101,7 @@ class DataLoaders():
         input:
               dataset (Dataset): dataset from which to load the data.
               num_workers (int, optional): how many subprocesses to use for data (default: 4)
-              chunk_size (int, optional): split audip size (default: 32000(4 s))
+              chunk_size (int, optional): split audio size (default: 32000(4 s))
               batch_size (int, optional): how many samples per batch to load
               is_train: if this dataloader for training
     '''
