@@ -1,8 +1,12 @@
 # Conv-TasNet
+
+**!!!new!!!: Updated model code, added code for skip connection section.**
+
 Conv-TasNet: Surpassing Ideal Time-Frequency Magnitude Masking for Speech Separation Pytorch's Implement
 > Luo Y, Mesgarani N. Conv-TasNet: Surpassing Ideal Time–Frequency Magnitude Masking for Speech Separation[J]. IEEE/ACM Transactions on Audio, Speech, and Language Processing, 2019, 27(8): 1256-1266.
 
 [![GitHub issues](https://img.shields.io/github/issues/JusperLee/Conv-TasNet)](https://github.com/JusperLee/Conv-TasNet/issues)  [![GitHub forks](https://img.shields.io/github/forks/JusperLee/Conv-TasNet)](https://github.com/JusperLee/Conv-TasNet/network) [![GitHub stars](https://img.shields.io/github/stars/JusperLee/Conv-TasNet)](https://github.com/JusperLee/Conv-TasNet/stargazers) [![Twitter](https://img.shields.io/twitter/url?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2FJusperLee%2FConv-TasNet)
+
 ### Requirement
 - **Pytorch 1.3.0**
 - **TorchAudio 0.3.1**
