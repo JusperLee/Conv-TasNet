@@ -1,7 +1,7 @@
 # Conv-TasNet
 
-**!!!new!!!: Updated model code, added code for skip connection section.**
-
+**:bangbang: new :bangbang: : Updated model code, added code for skip connection section.**
+:bangbang: notice :bangbang: : Training Batch size setting 8/16
 Conv-TasNet: Surpassing Ideal Time-Frequency Magnitude Masking for Speech Separation Pytorch's Implement
 > Luo Y, Mesgarani N. Conv-TasNet: Surpassing Ideal Time–Frequency Magnitude Masking for Speech Separation[J]. IEEE/ACM Transactions on Audio, Speech, and Language Processing, 2019, 27(8): 1256-1266.
 
