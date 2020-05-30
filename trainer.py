@@ -239,7 +239,7 @@ class Trainer():
 
                 if val_loss > best_loss:
                     no_impr += 1
-                    self.logger.info('no improvement, best loss: {:.4f}'.format(self.optimizer.best))
+                    self.logger.info('no improvement, best loss: {:.4f}'.format(self.scheduler.best))
                 else:
                     best_loss = val_loss
                     no_impr = 0
