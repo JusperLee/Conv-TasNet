@@ -86,7 +86,7 @@ class Trainer():
             if not os.path.exists(resume['path']):
                 raise FileNotFoundError(
                     "Could not find resume checkpoint: {}".format(resume))
-            cpt = torch.load(resume, map_location="cpu")
+            cpt = torch.load(resume['path'], map_location="cpu")
             self.cur_epoch = cpt["epoch"]
             self.logger.info("Resume from checkpoint {}: epoch {:d}".format(
                 resume['path'], self.cur_epoch))
@@ -94,7 +94,7 @@ class Trainer():
             net.load_state_dict(cpt["model_state_dict"])
             self.net = net.to(self.device)
             self.optimizer = self.create_optimizer(
-                optimizer, optimizer_kwargs, state=cpt["optimizer_state_dict"])
+                optimizer, optimizer_kwargs, state=cpt["optim_state_dict"])
         else:
             self.net = net.to(self.device)
             self.optimizer = self.create_optimizer(optimizer, optimizer_kwargs)
