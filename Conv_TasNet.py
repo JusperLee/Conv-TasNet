@@ -159,7 +159,8 @@ class Conv1D_Block(nn.Module):
         # N x O_C x L
         if self.causal:
             c = c[:, :, :-self.pad]
-        c = self.PReLU_2(self.norm_2(c))
+        c = self.PReLU_2(c)
+        c = self.norm_2(c)
         c = self.Sc_conv(c)
         return x+c
 
