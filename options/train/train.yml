@@ -52,7 +52,6 @@ net_conf:
   num_spks: 2
   activate: sigmoid
   causal: false
-  skip_con: true
 
 #### resume model
 resume:
