@@ -72,7 +72,7 @@ Conv-TasNet: Surpassing Ideal Time-Frequency Magnitude Masking for Speech Separa
 
 
 ### Our Results Image
-![](https://github.com/JusperLee/Conv-TasNet/blob/master/conv_tasnet_loss.png)
+![](https://github.com/JusperLee/Conv-TasNet/blob/master/Conv_TasNet_Pytorch/conv_tasnet_loss.png)
 
 
 ### Reference
