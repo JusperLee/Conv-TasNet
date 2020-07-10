@@ -1,0 +1,43 @@
+gpu_ids: [0,1,2,3,4,5,6,7]
+
+light_conf:
+  N: 512
+  L: 16
+  B: 128
+  H: 512
+  P: 3
+  X: 8
+  R: 3
+  norm: gLN
+  num_spks: 2
+  activate: relu
+  causal: false
+  # optimizer
+  lr: !!float 1e-3
+  # scheduler
+  scheduler_mode: min
+  scheduler_factor: 0.5
+  patience: 2
+  # Dataset
+  train_mix_scp: /home/likai/data1/create_scp/tr_mix.scp
+  train_ref_scp: 
+    - /home/likai/data1/create_scp/tr_s1.scp
+    - /home/likai/data1/create_scp/tr_s2.scp
+  val_mix_scp: /home/likai/data1/create_scp/cv_mix.scp
+  val_ref_scp: 
+    - /home/likai/data1/create_scp/cv_s1.scp
+    - /home/likai/data1/create_scp/cv_s2.scp
+  sr: 8000
+  # DataLoader
+  batch_size: 16
+  num_workers: 2
+
+train:
+  epochs: 130
+  early_stop: true
+  patience: 2
+  distributed_backend: ddp #dp, ddp, ddp_cpu, ddp2
+
+resume:
+  path: /home/likai/data1/Conv-TasNet_lightning
+  checkpoint: Conv-TasNet_lightning
