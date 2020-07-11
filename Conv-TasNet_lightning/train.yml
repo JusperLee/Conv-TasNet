@@ -29,8 +29,8 @@ light_conf:
     - /home/likai/data1/create_scp/cv_s2.scp
   sr: 8000
   # DataLoader
-  batch_size: 16
-  num_workers: 2
+  batch_size: 2
+  num_workers: 16
 
 train:
   epochs: 130
