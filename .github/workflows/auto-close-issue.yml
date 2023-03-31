@@ -1,0 +1,37 @@
+name: Auto-close stale issues
+
+on:
+  issues:
+    types:
+      - "opened"
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  close_issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Close stale issue
+        id: close-issue
+        uses: peter-evans/close-issue@v1.0.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          days-before-close: 7
+
+      - name: Notify user of issue closure
+        if: steps.close-issue.outputs.closed
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = context.issue;
+            const issueComment = {
+              owner: issue.owner,
+              repo: issue.repo,
+              issue_number: issue.number,
+              body: `@${issue.user.login}, your issue has been closed due to inactivity. If you have any further questions or comments, feel free to reopen the issue or start a new one.`
+            };
+            return github.issues.createComment(issueComment);
