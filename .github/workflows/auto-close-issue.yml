@@ -7,37 +7,19 @@ on:
     branches:
       - master # 仅在 main 分支上运行
 jobs:
-  close_issue:
+  close-issues:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Check for stale issues
-        id: check-issues
-        uses: gimenete/get-all-open-issues-action@v2
+      - uses: actions/stale@v5
         with:
+          days-before-issue-stale: 14
+          days-before-issue-close: 7
+          stale-issue-label: "stale"
+          stale-issue-message: "This issue is stale because it has been open for 14 days with no activity."
+          close-issue-message: "This issue was closed because it has been inactive for 7 days since being marked as stale."
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          stale-days: 7
-
-      - name: Close stale issues
-        if: steps.check-issues.outputs.has-issues
-        uses: peter-evans/close-issue@v1.0.0
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          days-before-close: 7
-
-      - name: Notify user of issue closure
-        if: steps.close-issue.outputs.closed
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const issue = context.issue;
-            const issueComment = {
-              owner: issue.owner,
-              repo: issue.repo,
-              issue_number: issue.number,
-              body: `@${issue.user.login}, your issue has been closed due to inactivity. If you have any further questions or comments, feel free to reopen the issue or start a new one.`
-            };
-            return github.issues.createComment(issueComment);
