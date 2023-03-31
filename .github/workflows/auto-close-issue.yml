@@ -3,7 +3,9 @@ name: Auto-close stale issues
 on:
   schedule:
     - cron: '0 0 * * *' # 每天UTC 0:00 运行
-
+  push:
+    branches:
+      - master # 仅在 main 分支上运行
 jobs:
   close_issue:
     runs-on: ubuntu-latest
