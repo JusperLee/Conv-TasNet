@@ -1,11 +1,8 @@
 name: Auto-close stale issues
 
 on:
-  issues:
-    types:
-      - "opened"
-  issue_comment:
-    types: [created, edited]
+  schedule:
+    - cron: '0 0 * * *' # 每天UTC 0:00 运行
 
 jobs:
   close_issue:
@@ -14,8 +11,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Close stale issue
-        id: close-issue
+      - name: Check for stale issues
+        id: check-issues
+        uses: gimenete/get-all-open-issues-action@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          stale-days: 7
+
+      - name: Close stale issues
+        if: steps.check-issues.outputs.has-issues
         uses: peter-evans/close-issue@v1.0.0
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
