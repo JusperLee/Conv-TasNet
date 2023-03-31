@@ -159,8 +159,6 @@ class Conv1D_Block(nn.Module):
         # N x O_C x L
         if self.causal:
             c = c[:, :, :-self.pad]
-        c = self.PReLU_2(c)
-        c = self.norm_2(c)
         c = self.Sc_conv(c)
         return x+c
 
@@ -274,10 +272,10 @@ def check_parameters(net):
 
 
 def test_convtasnet():
-    x = torch.randn(4, 32)
+    x = torch.randn(320)
     nnet = ConvTasNet()
     s = nnet(x)
-    print(str(look_parameters(nnet))+' Mb')
+    print(str(check_parameters(nnet))+' Mb')
     print(s[1].shape)
 
 

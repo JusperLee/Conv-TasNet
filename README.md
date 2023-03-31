@@ -1,5 +1,7 @@
 # Conv-TasNet
 
+**:bangbang:new:bangbang:: The modified training and testing code is now able to separate speech properly.**
+
 **:bangbang:new:bangbang:: Updated model code, added code for skip connection section.**
 
 **:bangbang:notice:bangbang:: Training Batch size setting 8/16**
@@ -67,7 +69,7 @@ Conv-TasNet: Surpassing Ideal Time-Frequency Magnitude Masking for Speech Separa
 | 512  |  16 |128| 512  |128|  3 |  8 |  3 |cLN   |  √ |  1.53 | 5.1M  | 10.6  |  11.0 |
 
 ### Pre-Train Model
-
+:bangbang:new:bangbang:: [Huggingface Pretrain](https://huggingface.co/JusperLee/Conv-TasNet/tree/main)
 [**Google Driver**](https://drive.google.com/open?id=18xCr-N_Ashf9X9q0nxQSVZbDXDk2ONVQ)
 
 
