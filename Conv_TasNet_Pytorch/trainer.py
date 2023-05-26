@@ -166,7 +166,7 @@ class Trainer():
             egs = to_device(egs, self.device)
             self.optimizer.zero_grad()
             ests = data_parallel(self.net, egs['mix'], device_ids=self.gpuid)
-            loss = si_snr_loss(ests, egs) + self.mse()
+            loss = si_snr_loss(ests, egs)
             loss.backward()
             if self.clip_norm:
                 clip_grad_norm_(self.net.parameters(), self.clip_norm)
